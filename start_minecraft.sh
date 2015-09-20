@@ -12,7 +12,7 @@ DISPLAY_ON_LAUNCH=1
 #change to name of the .jar you wish to run
 SERVER_JAR=minecraft_server.jar
 #change to name of world
-WORLD_NAME="tehbeard"
+WORLD_NAME="world"
 
 LOG_TDIR=$MC_PATH/logs
 #change to how many days of logs you wish to unpack when running 'logs' or 'logs clean'
