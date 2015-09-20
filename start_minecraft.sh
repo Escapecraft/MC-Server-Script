@@ -9,15 +9,13 @@ SCREEN_NAME="minecraft"
 MEMALOC=4
 #Configure if you wish to connect to the screen when running script: 1 is true, 0 is false
 DISPLAY_ON_LAUNCH=1
-SNAP_PATH=/backup/snapshots
-
+#change to name of the .jar you wish to run
+SERVER_JAR=minecraft_server.jar
+#change to name of world
 WORLD_NAME="tehbeard"
 
-BKUP_PATH=/backup/mine
-
-CARTO_PATH=$MC_PATH/carto
-MAPS_PATH=$MC_PATH/maps
 LOG_TDIR=$MC_PATH/logs
+#change to how many days of logs you wish to unpack when running 'logs' or 'logs clean'
 LOGS_DAYS=7
 
 # End of configuration
@@ -33,13 +31,8 @@ display() {
 server_launch() {
 	echo "Launching minecraft server..."
     cd $MC_PATH
-    if [ ! -f minecraft_server.1.7.10.jar ]; then
-        echo "running install script!"
-        ./FTBInstall.sh
-    fi
-
     echo "make sure to read eula.txt before playing!"
-    screen -m -d -S $SCREEN_NAME /usr/jdk1.7.0_40/bin/java -server -Xms2048m -Xmx5120m -XX:PermSize=256m -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -jar FTBServer-1.7.10-1408.jar nogui; sleep 1
+    screen -m -d -S $SCREEN_NAME /usr/jdk1.7.0_40/bin/java -server -Xms2048m -Xmx5120m -XX:PermSize=256m -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -jar $SERVER_JAR nogui; sleep 1
 }
 
 server_stop() {
@@ -70,7 +63,7 @@ then
 			"force")
 				echo "Forcing server start..."
 				echo "Killing server processes..."
-				kill `ps -e | grep java | cut -d " " -f 1`
+				kill `ps -n | grep $SERVER_JAR | grep -v "grep" | tr -s ' ' | cut -d " " -f 2`
 				rm -fr $MC_PATH/*.log.lck 2> /dev/null/
 				echo "Done."
 				server_launch
@@ -104,7 +97,7 @@ then
 			case $2 in
 			"force")
 				echo "Killing server processes..."
-				kill `ps -e | grep java | cut -d " " -f 1`
+				kill `ps -n | grep $SERVER_JAR | grep -v "grep" | tr -s ' ' | cut -d " " -f 2`
 				rm -fr $MC_PATH/*.log.lck 2> /dev/null/
 				echo "Done.";;
 			*)
